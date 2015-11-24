@@ -1,0 +1,60 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define all(v) v.begin() , v.end()
+using ll = long long;
+const int N = (int) 2e5 + 5;
+int main() {
+//ios::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+	int n;
+	scanf("%d", &n);
+	vector<vector<pair<int, int>>> v(N);
+	for (int i = 0; i < n; ++i) {
+		int x, y;
+		scanf("%d%d", &x, &y);
+		v[y - x + (int) 1e5].push_back( { x, y });
+	}
+	vector<vector<int>> v2(N);
+	for (int i = 0; i < n; ++i) {
+		int x;
+		scanf("%d", &x);
+		v2[x + (int) 1e5].push_back(i);
+	}
+
+	for (int i = 0; i < N; ++i) {
+		sort(all(v[i]));
+	}
+
+	vector<pair<int, int>> res(n);
+	for (int i = 0; i < N; ++i) {
+		if (v2[i].size() != v[i].size()) {
+			puts("NO");
+			return 0;
+		}
+
+		for (int j = 0; j < (int) v[i].size(); ++j)
+			res[v2[i][j]] = v[i][j];
+	}
+
+	map<pair<int, int>, int> mp;
+
+	for (int i = 0; i < n; ++i) {
+
+		if (res[i].first && !mp[ { res[i].first - 1, res[i].second }]) {
+			puts("NO");
+			return 0;
+		}
+		if (res[i].second && !mp[ { res[i].first, res[i].second - 1 }]) {
+			puts("NO");
+			return 0;
+		}
+		mp[res[i]] = 1;
+	}
+
+	puts("YES");
+	for (int i = 0; i < n; ++i)
+		printf("%d %d\n", res[i].first, res[i].second);
+	return 0;
+
+}
